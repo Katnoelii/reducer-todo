@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, useReducer} from 'react';
+import {initialState, todoReducer } from './reducers/reducer'
 import './App.css';
+import AddTodo from './components/AddTodo'
+import TodoList from './components/TodoList'
+
 
 function App() {
+  const [formData, setFormData] = useState()
+  const [state, dispatch] = useReducer(todoReducer,initialState)
+
+  const onHandleChanges = evt => {
+    setFormData(evt.target.value)
+  }
+
+  const completedTodo = id => {
+    console.log("Clicked, bitch", id)
+    dispatch({type:"TODO_TOGGLE", payload: id})
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className='App'>
+        <h1>Daily Tasks</h1>
+        <AddTodo
+          onHandleChanges = {onHandleChanges}
+          formData = {formData}
+          setFormData = {setFormData}
+          dispatch = {dispatch}
+         />
+         <TodoList
+         completedTodo = {completedTodo}
+         todos = {state.todo}
+         />
+      </ div>
   );
 }
 
